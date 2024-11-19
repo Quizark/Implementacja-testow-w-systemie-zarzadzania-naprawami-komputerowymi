@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="background-image">
+        <form [formGroup]="searchForm" (ngSubmit)="handleSearch()">
+            <input formControlName="searchQuery" placeholder="Search clients..." class="input" />
+        </form>
+
+        <div class="big-scroll-container">
+            <div *ngIf="loading">Loading clients...</div>
+            <div *ngIf="!loading && filteredClients.length > 0">
+                <div *ngFor="let client of filteredClients" class="client-container">
+                    <div class="client-info">
+                        <p>Name: {{ client.name }} {{ client.surname }}</p>
+                        <p>Email: {{ client.email }}</p>
+                        <p>Phone Number: {{ client.phone }}</p>
+                    </div>
+                    <button class="button" (click)="editClient(client)">Edit</button>
+                </div>
+            </div>
+            <div *ngIf="!loading && filteredClients.length === 0">No clients found</div>
+        </div>
+
+        <div class="button-container">
+            <button class="button" (click)="refreshClients()">Refresh</button>
+            <button class="button" (click)="goBack()">Back</button>
+        </div>
+    </div>
+</div>

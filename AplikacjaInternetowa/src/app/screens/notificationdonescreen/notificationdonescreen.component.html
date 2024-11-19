@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="background-image">
+        <div class="text-input-container">
+            <div *ngIf="tasks.length > 0; else noTasks">
+                <div class="big-scroll-container">
+                    <div *ngFor="let task of tasks" class="client-container">
+                        <p class="text">Device: {{ task.deviceCodeNumber }}</p>
+                        <p class="text">Task: {{ task.taskDescription }}</p>
+                        <button class="button" (click)="markTaskAsDone(task.id)">
+                            Set Task As Done
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noTasks>
+                <p>No incomplete tasks found.</p>
+            </ng-template>
+            <div class="button-container">
+                <button class="button" (click)="goBack()">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

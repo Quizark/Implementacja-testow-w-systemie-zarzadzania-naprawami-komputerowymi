@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="background-image">
+    <form [formGroup]="clientForm" (ngSubmit)="handleSearch(searchQuery)">
+      <input formControlName="searchInput" placeholder="Search tasks..." class="input" />
+    </form>
+    <div class="text-input-container">
+      <div *ngIf="filteredTasks.length === 0">
+        <p>No tasks found.</p>
+      </div>
+      <div class="big-scroll-container">
+        <div *ngFor="let task of filteredTasks" class="client-container">
+          <p class="text">Device: {{ task.deviceCodeNumber }}</p>
+          <p class="text">Task: {{ task.taskDescription }}</p>
+          <p class="text">Employee: {{ task.employeeEmail }}</p>
+          <p class="text">Is Done: {{ task.isDone ? 'Yes' : 'No' }}</p>
+          <button class="red-button" (click)="deleteTask(this.task.id)">Delete Task</button>
+        </div>
+      </div>
+    </div>
+    <button class="button" (click)="goBack()">Back</button>
+  </div>
+</div>

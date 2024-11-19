@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="background-image">
+      <form [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
+        <div class="text-input-container">
+          <input
+            formControlName="email"
+            type="text"
+            placeholder="Email"
+            class="input"
+          />
+          <input
+            formControlName="password"
+            type="password"
+            placeholder="Password"
+            class="input"
+            
+          />
+        </div>
+        <div class="button-container-with-text">
+          <button type="submit" class="button">Login</button>
+          <button type="button" class="button" (click)="navigateToRegister()">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

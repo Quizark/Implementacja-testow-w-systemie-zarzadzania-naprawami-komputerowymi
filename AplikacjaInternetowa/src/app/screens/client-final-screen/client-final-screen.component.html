@@ -1,0 +1,32 @@
+<div *ngIf="deviceData" class="background-image">
+    <!-- Logo with link to home screen -->
+    <div class="logo-container">
+        <a routerLink="/login">
+            <img src="../../assets/Ikona AM.png" alt="Logo">
+        </a>
+    </div>
+
+    <div class="device-info-container">
+        <h2>Device Information</h2>
+        
+        <div>
+            <h3>Information upon creating report</h3>
+            <p><strong>Code Number:</strong> {{ deviceData.device.codeNumber }}</p>
+            <p><strong>Description:</strong> {{ deviceData.device.description }}</p>
+            <p><strong>Email:</strong> {{ deviceData.device.email }}</p>
+            <p><strong>Device Complete:</strong> {{ deviceData.device.deviceComplete }}</p>
+            <p><strong>Device Work:</strong> {{ deviceData.device.deviceWork }}</p>
+            <p><strong>Visible Damage:</strong> {{ deviceData.device.visibleDamage }}</p>
+            <p><strong>Date:</strong> {{ deviceData.device.date }}</p>
+        </div>
+
+        <div>
+            <h3>Updates</h3>
+            <div *ngFor="let detail of deviceData.details" class="update-detail">
+                <p><strong>Detail Date:</strong> {{ detail.date }}</p>
+                <p><strong>Description:</strong> {{ detail.description }}</p>
+                <p><strong>Employee:</strong> {{ detail.employee }}</p>
+            </div>
+        </div>
+    </div>
+</div>

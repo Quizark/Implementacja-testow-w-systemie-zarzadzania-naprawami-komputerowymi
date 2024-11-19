@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="background-image">
+      <h1 class="header">Welcome<br>{{ userEmail }}!</h1>
+  
+      <div *ngIf="notifications.length > 0" class="notification-wrapper" (click)="handleNotificationPress()">
+        <div class="notification-container">
+          <div class="scrolling-text" [@scroll]="{ value: scrollState, params: { duration: (contentWidth - containerWidth) * 50 } }">
+            <span *ngFor="let notification of notifications">
+              🔔 {{ notification.deviceCodeNumber }}: {{ notification.taskDescription }}
+            </span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="button-container">
+        <button class="button" (click)="navigateTo('addnewclientscreen')">Add New Client</button>
+        <button class="button" (click)="navigateTo('addreportscreen')">Add New Report</button>
+        <button class="button" (click)="navigateTo('workprogressscreen')">Work Progress</button>
+        <button class="button" *ngIf="isAdmin" (click)="navigateTo('Managmentscreen')">Management</button>
+        <button class="red-button" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+  

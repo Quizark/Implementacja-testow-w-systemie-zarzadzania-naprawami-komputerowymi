@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="background-image">
+        <form [formGroup]="employeeForm" (ngSubmit)="handleSave()">
+            <div class="text-input-container">
+                <input formControlName="name" placeholder="Name" class="input" />
+                <input formControlName="surname" placeholder="Surname" class="input" />
+                <input formControlName="email" type="email" placeholder="Email" class="input" />
+                <input formControlName="specialization" placeholder="Specialization" class="input" />
+            </div>
+            <div class="button-container-with-text">
+                <button type="button" [ngClass]="{'red-button': isAdmin, 'green-button': !isAdmin}"
+                    (click)="handleToggleAdmin()">
+                    {{ isAdmin ? 'Set as Not Admin' : 'Set as Admin' }}
+                </button>
+                <button type="submit" class="green-button">Save</button>
+                <button type="button" class="red-button" (click)="handleDelete()">Delete Employee</button>
+                <button type="button" class="button" (click)="goBack()">Back</button>
+            </div>
+        </form>
+    </div>
+</div>

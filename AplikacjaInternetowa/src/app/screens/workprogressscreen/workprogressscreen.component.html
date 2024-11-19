@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="background-image">
+      <form [formGroup]="workForm">
+        <div class="text-input-container">
+          <input
+            formControlName="codeNumber"
+            placeholder="Enter Code"
+            class="input"
+            type="text"
+          />
+          <button type="submit" class="button" (click)="handleDeviceSearch()">Search by Code</button>
+          <input
+            formControlName="email"
+            placeholder="Enter Email To Search For Device Codes"
+            class="input"
+            type="email"
+          />
+          <button type="button" class="button" (click)="handleEmailSearch()">Search codes by Email</button>
+          <button type="button" class="button" (click)="goBack()">Back</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

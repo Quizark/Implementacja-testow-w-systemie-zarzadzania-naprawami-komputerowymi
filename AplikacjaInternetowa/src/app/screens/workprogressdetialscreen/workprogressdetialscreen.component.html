@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="background-image">
+    <div class="clinet-information-container">
+      <p class="header-client">Client Information:</p>
+      <p class="text-client">{{ personData.name || 'N/A'}} {{ personData.surname }}</p>
+      <p class="text-client">{{ deviceData[0]?.email }}</p>
+      <p class="text-client">{{ personData.phone || 'N/A' }}</p>
+    </div>
+    <div class="device-scroll-container-big">
+      <div *ngFor="let device of deviceData; let i = index" class="device-information-container">
+        <p class="header-device">Information {{ i + 1 }}:</p>
+        <p class="text-device">Employee: {{ device.employee || 'N/A' }}</p>
+        <p class="text-device">Date of report: {{ device.date }}</p>
+        <p class="text-device">Diagnosis: {{ device.description }}</p>
+        <p class="header-device">Information While Accepting Device:</p>
+        <p class="text-device">Device work: {{ device.deviceWork }}</p>
+        <p class="text-device">Device complete: {{ device.deviceComplete }}</p>
+        <p class="text-device">Visible signs of damage: {{ device.visibleDamage }}</p>
+        <button class="button" (click)="navigateToWorkSee(device.id)">Details</button>
+      </div>
+    </div>
+    <div class="button-container-with-text">
+      <button type="button" class="button" (click)="goBack()">Back</button>
+    </div>
+  </div>
+</div>

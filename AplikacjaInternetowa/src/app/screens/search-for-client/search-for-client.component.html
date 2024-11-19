@@ -1,0 +1,16 @@
+<div class="background-image">
+    <div class="header"> Witaj drogi kliencie. Aby wyszukać swoje urządzenie wprowadź numer urządzenia podany przez
+        naszego pracownika gdy zgłaszano chęć naprawy. Pod polem numery należy wpisać swój adres email. Kontakt w razie
+        pomocy - 123 123 123</div>
+
+    <div class="container">
+        <form [formGroup]="searchForm" (ngSubmit)="handleSubmit()">
+        <div class="text-input-container">
+            <input formControlName="code" type="text" placeholder="Code Number" class="input" />
+            <input formControlName="email" type="email" placeholder="Email" class="input" />
+            <button type="submit" class="button">Search</button>
+        </div>
+        
+    </form>
+    </div>
+</div>

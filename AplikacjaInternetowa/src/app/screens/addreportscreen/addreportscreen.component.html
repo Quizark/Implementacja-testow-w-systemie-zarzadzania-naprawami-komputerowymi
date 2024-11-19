@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="background-image">
+        <form [formGroup]="reportForm" (ngSubmit)="handleSubmit()">
+            <div class="text-input-container">
+                <label>Choose Client Email</label>
+                <select formControlName="email" class="input">
+                    <option value="">Select an email...</option>
+                    <option *ngFor="let email of emails" [value]="email">{{ email }}</option>
+                </select>
+
+                <label>Device Work</label>
+                <div class="button-container-inline">
+                    <button type="button" class="green-button" [class.active]="reportForm.get('deviceWork')?.value === 'Yes'"
+                        [class.inactive]="reportForm.get('deviceWork')?.value === 'No'"
+                        (click)="reportForm.patchValue({deviceWork: 'Yes'})">Yes</button>
+                    <button type="button" class="red-button" [class.active]="reportForm.get('deviceWork')?.value === 'No'"
+                        [class.inactive]="reportForm.get('deviceWork')?.value === 'Yes'"
+                        (click)="reportForm.patchValue({deviceWork: 'No'})">No</button>
+                </div>
+
+                <label>Device Complete</label>
+                <div class="button-container-inline">
+                    <button type="button" class="green-button"
+                        [class.active]="reportForm.get('deviceComplete')?.value === 'Yes'"
+                        [class.inactive]="reportForm.get('deviceComplete')?.value === 'No'"
+                        (click)="reportForm.patchValue({deviceComplete: 'Yes'}); needPhotosDevice = false;">Yes</button>
+                    <button type="button" class="red-button"
+                        [class.active]="reportForm.get('deviceComplete')?.value === 'No'"
+                        [class.inactive]="reportForm.get('deviceComplete')?.value === 'Yes'"
+                        (click)="reportForm.patchValue({deviceComplete: 'No'}); needPhotosDevice = true;">No</button>
+                </div>
+
+                <label>Visible Damage</label>
+                <div class="button-container-inline">
+                    <button type="button" class="red-button"
+                        [class.active]="reportForm.get('visibleDamage')?.value === 'Yes'"
+                        [class.inactive]="reportForm.get('visibleDamage')?.value === 'No'"
+                        (click)="reportForm.patchValue({visibleDamage: 'Yes'}); needPhotosDevice = true;">Yes</button>
+                    <button type="button" class="green-button"
+                        [class.active]="reportForm.get('visibleDamage')?.value === 'No'"
+                        [class.inactive]="reportForm.get('visibleDamage')?.value === 'Yes'"
+                        (click)="reportForm.patchValue({visibleDamage: 'No'}); needPhotosDamage = false;">No</button>
+                </div>
+
+                <label>Code Assigned</label>
+                <div class="button-container-inline">
+                    <button type="button" class="button" [class.active]="isCodeAssigned"
+                        [class.inactive]="!isCodeAssigned"
+                        (click)="reportForm.patchValue({codeAssigned: 'Yes'}); isCodeAssigned = true;">Yes</button>
+                    <button type="button" class="button" [class.active]="!isCodeAssigned"
+                        [class.inactive]="isCodeAssigned"
+                        (click)="reportForm.patchValue({codeAssigned: 'No'}); isCodeAssigned = false;">No</button>
+
+                </div>
+
+
+                <input *ngIf="isCodeAssigned" formControlName="codeNumber" placeholder="Enter Code" class="input" />
+                <input formControlName="description" placeholder="Description of the problem" class="input" />
+            </div>
+            <div class="button-container-with-text">
+                <button type="submit" class="button" (click)="handleSubmit()">Add Report</button>
+                <button type="button" class="button" (click)="goBack()">Back</button>
+            </div>
+        </form>
+    </div>
+</div>

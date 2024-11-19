@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="background-image">
+    <form [formGroup]="searchForm" (ngSubmit)="handleSearch()">
+      <input formControlName="searchQuery" placeholder="Search employee..." class="input" />
+    </form>
+
+    <div class="big-scroll-container">
+      <div *ngIf="loading" class="loading-text">Loading employees...</div>
+      <div *ngIf="!loading && filteredEmployees.length > 0" class="employee-list">
+        <div *ngFor="let employee of filteredEmployees" class="client-container">
+          <p class="text">Name: {{employee.name}} {{employee.surname}}</p>
+          <p class="text">Email: {{employee.email}}</p>
+          <p class="text">Specialization: {{employee.specialization}}</p>
+          <p class="text">Admin: {{employee.isAdmin ? 'Yes' : 'No'}}</p>
+          <button class="button" (click)="editEmployee(employee)">Edit</button>
+        </div>
+      </div>
+    </div>
+    <button class="button" (click)="fetchEmployees()">Refresh</button>
+    <button class="button" (click)="goBack()">Back</button>
+  </div>
+</div>

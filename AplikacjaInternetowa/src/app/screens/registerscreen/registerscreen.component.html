@@ -1,0 +1,19 @@
+<!-- register.component.html -->
+<div class="container">
+    <div class="background-image">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="text-input-container">
+                <input id="name" formControlName="name" type="text" placeholder="Name" class="input" />
+                <input id="surname" formControlName="surname" type="text" placeholder="Surname" class="input" />
+                <input id="specialization" formControlName="specialization" type="text" placeholder="Specialization" class="input" />
+                <input id="email" formControlName="email" type="email" placeholder="Email" class="input" />
+                <input id="password" formControlName="password" type="password" placeholder="Password" class="input" />
+                <input id="confirmPassword" formControlName="confirmPassword" type="password" placeholder="Confirm Password" class="input" />
+            </div>
+            <div class="button-container-with-text">
+                <button type="submit"  class="button" [disabled]="registerForm.invalid">Create Account</button>
+                <button type="button"  class="button" (click)="onBack()">Back</button>
+            </div>
+        </form>
+    </div>
+</div>

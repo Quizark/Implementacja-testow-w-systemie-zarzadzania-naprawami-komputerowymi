@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="background-image">
+        <form [formGroup]="taskForm" (ngSubmit)="handleSubmit()">
+            <div class="text-input-container">
+                <label for="employee">Choose an employee:</label>
+                <mat-form-field appearance="fill">
+                    <mat-label>Employee</mat-label>
+                    <mat-select formControlName="selectedEmployee" placeholder="Select an employee">
+                        <mat-option *ngFor="let employee of employees" [value]="employee.id">
+                            {{ employee.name }} {{ employee.surname }} - {{ employee.specialization }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <p>Selected Employee: {{ selectedEmployeeName }}</p>
+
+                <label for="device">Choose a device:</label>
+                <mat-form-field appearance="fill">
+                    <mat-label>Device</mat-label>
+                    <mat-select formControlName="selectedDevice" placeholder="Select a device">
+                        <mat-option *ngFor="let device of devices" [value]="device.id">
+                            Device {{ device.codeNumber }} - {{ device.description }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <p>Selected Device: {{ selectedDeviceCode }}</p>
+
+                <label for="taskDescription">Task Description:</label>
+                <textarea matInput formControlName="taskDescription" placeholder="Enter task description..." rows="5"></textarea>
+            </div>
+            <div class="button-container-with-text">
+                <button type="submit" class="button">Submit Task</button>
+                <button type="button" class="button" (click)="goBack()">Back</button>
+            </div>
+        </form>
+    </div>
+</div>

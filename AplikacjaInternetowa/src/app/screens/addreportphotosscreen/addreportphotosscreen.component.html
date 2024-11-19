@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="background-image">
+      <div class="button-container">
+        <button class="button" (click)="handleAddPhotos()">Add Photo</button>
+  
+        <img *ngIf="selectedPhoto" [src]="selectedPhotoUrl" class="image-upload" />
+  
+        <button class="button" (click)="handleSubmit()">Upload Photo</button>
+        <button class="button" (click)="navigateToHome()">Back</button>
+      </div>
+    </div>
+  </div>
+  
