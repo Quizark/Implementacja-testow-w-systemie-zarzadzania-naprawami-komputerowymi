@@ -1,5 +1,8 @@
-package com.example.springbootmongodb;
+package com.example.springbootmongodb.controller;
 
+import com.example.springbootmongodb.util.JwtUtil;
+import com.example.springbootmongodb.repository.UserRepository;
+import com.example.springbootmongodb.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +35,10 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@RequestBody User user) {
+        if (!isValidEmail(user.getEmail())) {
+            return new ResponseEntity<>("Invalid email format", HttpStatus.BAD_REQUEST);
+        }
+
         if (userRepository.findByEmail(user.getEmail()) != null) {
             return new ResponseEntity<>("Email already in use", HttpStatus.CONFLICT);
         }
@@ -183,5 +190,11 @@ public class UserController {
             return user;
         }
     }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        return email != null && email.matches(emailRegex);
+    }
+
 }
 

@@ -1,6 +1,6 @@
-package com.example.springbootmongodb;
+package com.example.springbootmongodb.controller;
 
-import com.example.springbootmongodb.JwtUtil;
+import com.example.springbootmongodb.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

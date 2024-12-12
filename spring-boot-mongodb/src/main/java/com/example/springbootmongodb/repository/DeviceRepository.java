@@ -1,7 +1,7 @@
-package com.example.springbootmongodb;
+package com.example.springbootmongodb.repository;
 
+import com.example.springbootmongodb.model.Device;
 import org.springframework.data.mongodb.repository.Aggregation;
-import org.springframework.data.mongodb.repository.Query;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

@@ -1,5 +1,6 @@
-package com.example.springbootmongodb;
+package com.example.springbootmongodb.repository;
 
+import com.example.springbootmongodb.model.Person;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface

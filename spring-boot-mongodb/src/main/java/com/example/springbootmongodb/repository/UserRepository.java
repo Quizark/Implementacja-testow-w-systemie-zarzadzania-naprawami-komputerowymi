@@ -1,5 +1,6 @@
-package com.example.springbootmongodb;
+package com.example.springbootmongodb.repository;
 
+import com.example.springbootmongodb.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

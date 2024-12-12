@@ -1,5 +1,7 @@
-package com.example.springbootmongodb;
+package com.example.springbootmongodb.controller;
 
+import com.example.springbootmongodb.repository.PersonRepository;
+import com.example.springbootmongodb.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
