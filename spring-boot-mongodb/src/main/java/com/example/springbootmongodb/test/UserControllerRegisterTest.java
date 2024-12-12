@@ -37,5 +37,16 @@ public class UserControllerRegisterTest {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    public void shouldNotRegisterExistingUser() throws Exception {
+        User existingUser = new User();
+        existingUser.setEmail("existing@example.com");
+        existingUser.setPassword("password");
 
+        mockMvc.perform(post("/users/register")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(existingUser)))
+                .andExpect(status().isConflict());
+    }
+   
 }
