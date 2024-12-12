@@ -48,5 +48,16 @@ public class UserControllerRegisterTest {
                         .content(objectMapper.writeValueAsString(existingUser)))
                 .andExpect(status().isConflict());
     }
-   
+    @Test
+    public void shouldNotRegisterUserWithBadEmail() throws Exception {
+        User invalidUser = new User();
+        invalidUser.setEmail("invalid-email-format");
+        invalidUser.setPassword("password");
+
+        mockMvc.perform(post("/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidUser)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid email format"));
+    }
 }
