@@ -12,10 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -30,22 +28,20 @@ public class DeviceControllerTest {
 
     @Test
     public void shouldCreateDeviceSuccessfully() throws Exception {
+        // Given
         String validSessionToken = getLoginToken();
-
         Device device = new Device();
         device.setCodeNumber("12345");
         device.setEmail("duplicate@example.com");
         device.setVisibleDamage("None");
         device.setDescription("New laptop");
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Device registered successfully");
-        response.put("Device", device);
-
+        // When
         mockMvc.perform(post("/devices/create")
                         .header("Authorization", validSessionToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(device)))
+                // Then
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("Device registered successfully"))
                 .andExpect(jsonPath("$.Device.codeNumber").value("12345"));
@@ -53,11 +49,14 @@ public class DeviceControllerTest {
 
     @Test
     public void shouldReturnDevicesByEmail() throws Exception {
+        // Given
         String validSessionToken = getLoginToken();
         String email = "duplicate@example.com";
 
+        // When
         mockMvc.perform(get("/devices/email/{email}", email)
                         .header("Authorization", validSessionToken))
+                // Then
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }

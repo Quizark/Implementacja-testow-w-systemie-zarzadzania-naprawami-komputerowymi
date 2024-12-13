@@ -25,39 +25,51 @@ public class UserControllerRegisterTest {
 
     @Test
     public void shouldRegisterNewUser() throws Exception {
+        // Given
         User newUser = new User();
         newUser.setEmail("test2@example.com");
         newUser.setPassword("password");
         newUser.setName("John");
         newUser.setSurname("Doe");
 
+        // When
         mockMvc.perform(post("/users/register")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(newUser)))
+                // Then
                 .andExpect(status().isCreated());
     }
 
+
     @Test
     public void shouldNotRegisterExistingUser() throws Exception {
+        // Given
         User existingUser = new User();
         existingUser.setEmail("existing@example.com");
         existingUser.setPassword("password");
 
+        // When
         mockMvc.perform(post("/users/register")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(existingUser)))
+                // Then
                 .andExpect(status().isConflict());
     }
+
     @Test
     public void shouldNotRegisterUserWithBadEmail() throws Exception {
+        // Given
         User invalidUser = new User();
         invalidUser.setEmail("invalid-email-format");
         invalidUser.setPassword("password");
 
+        // When
         mockMvc.perform(post("/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidUser)))
+                // Then
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Invalid email format"));
     }
+
 }

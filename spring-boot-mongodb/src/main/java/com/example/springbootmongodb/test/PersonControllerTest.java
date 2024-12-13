@@ -27,16 +27,20 @@ public class PersonControllerTest {
 
     @Test
     public void shouldGetAllPersonsWhenSessionIsValid() throws Exception {
+        // Given
         String validSessionToken = getLoginToken();
 
+        // When
         mockMvc.perform(get("/persons")
                         .header("Authorization", validSessionToken))
+                // Then
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     public void shouldNotCreatePersonWithDuplicateEmail() throws Exception {
+        // Given
         String validSessionToken = getLoginToken();
         Person duplicatePerson = new Person();
         duplicatePerson.setName("Jane");
@@ -44,10 +48,12 @@ public class PersonControllerTest {
         duplicatePerson.setEmail("duplicate@example.com");
         duplicatePerson.setPhone("123456789");
 
+        // When
         mockMvc.perform(post("/persons/create")
                         .header("Authorization", validSessionToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(duplicatePerson)))
+                // Then
                 .andExpect(status().isConflict())
                 .andExpect(content().string("Email already in use"));
     }
