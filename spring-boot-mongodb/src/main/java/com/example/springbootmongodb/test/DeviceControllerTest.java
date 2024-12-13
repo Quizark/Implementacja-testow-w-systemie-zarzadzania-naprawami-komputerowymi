@@ -60,6 +60,23 @@ public class DeviceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
+
+    @Test
+    public void shouldReturnDeviceNotFoundWhenDeviceDoesNotExist() throws Exception {
+        // Given
+        String codeNumber = "12345";
+        String email = "test@example.com";
+
+        // When
+        mockMvc.perform(get("/devices/deviceWithDetails")
+                        .param("codeNumber", codeNumber)
+                        .param("email", email))
+
+                // Then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").value("Device not found"));
+    }
+
     private String getLoginToken() throws Exception {
         User user = new User();
         user.setEmail("test@test.test");
