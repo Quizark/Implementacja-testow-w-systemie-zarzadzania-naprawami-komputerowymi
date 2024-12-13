@@ -51,7 +51,16 @@ public class DeviceControllerTest {
                 .andExpect(jsonPath("$.Device.codeNumber").value("12345"));
     }
 
+    @Test
+    public void shouldReturnDevicesByEmail() throws Exception {
+        String validSessionToken = getLoginToken();
+        String email = "duplicate@example.com";
 
+        mockMvc.perform(get("/devices/email/{email}", email)
+                        .header("Authorization", validSessionToken))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
     private String getLoginToken() throws Exception {
         User user = new User();
         user.setEmail("test@test.test");
