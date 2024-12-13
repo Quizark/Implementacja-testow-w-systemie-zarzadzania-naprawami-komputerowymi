@@ -1,5 +1,6 @@
 package com.example.springbootmongodb.test;
 
+import com.example.springbootmongodb.model.Person;
 import com.example.springbootmongodb.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -11,10 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -36,7 +35,22 @@ public class PersonControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
+    @Test
+    public void shouldNotCreatePersonWithDuplicateEmail() throws Exception {
+        String validSessionToken = getLoginToken();
+        Person duplicatePerson = new Person();
+        duplicatePerson.setName("Jane");
+        duplicatePerson.setSurname("Doe");
+        duplicatePerson.setEmail("duplicate@example.com");
+        duplicatePerson.setPhone("123456789");
 
+        mockMvc.perform(post("/persons/create")
+                        .header("Authorization", validSessionToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(duplicatePerson)))
+                .andExpect(status().isConflict())
+                .andExpect(content().string("Email already in use"));
+    }
 
 
     private String getLoginToken() throws Exception {
