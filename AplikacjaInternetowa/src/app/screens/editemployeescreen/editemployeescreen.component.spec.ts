@@ -89,4 +89,25 @@ describe('EditemployeescreenComponent', () => {
     });
     expect(component.isAdmin).toBe(employee.isAdmin);
   });
+
+  it('should toggle admin status and update the server', () => {
+    // Given
+    mockApiService.toggleAdmin.and.returnValue(of({}));
+    expect(component.isAdmin).toBeTrue();
+
+    // When
+    component.handleToggleAdmin();
+
+    // Then
+    expect(mockApiService.toggleAdmin).toHaveBeenCalledWith(
+      'mock-session-token',
+      '123',
+      'John',
+      'Doe',
+      'john.doe@example.com',
+      'Engineering',
+      true
+    );
+    expect(component.isAdmin).toBe(false);
+  });
 });
