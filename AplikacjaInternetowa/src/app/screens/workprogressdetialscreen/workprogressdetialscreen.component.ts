@@ -34,34 +34,27 @@ export class WorkprogressdetialscreenComponent implements OnInit {
 
   ngOnInit(): void {
     const sessionToken = this.userService.getSessionToken();
-
     this.deviceData = history.state.device;
-    console.log('Received device data:', this.deviceData);
-    if (sessionToken === null) {
+    console.log('Received device data:', this.deviceData);  // Dodaj logowanie
+    console.log('Session Token:', sessionToken);
+
+    if (!sessionToken) {
       console.error('Session token is null');
       return;
-    }
-    //Pobieranie danych o kliencie
+    }    
+  
+    // Fetch person data by email
     this.apiService.fetchPersonDataByEmail(this.deviceData[0]?.email, sessionToken).subscribe(
       (data: any) => {
         this.personData = data;
-        console.log("personData", this.personData);
-        this.updateForm();
+        console.log("personData", this.personData);  // Dodaj logowanie
       },
       (error) => {
         console.error('Error fetching person data:', error);
       }
     );
   }
-
-  updateForm(): void {
-    this.clientForm.patchValue({
-      clientName: this.personData.name || '',
-      clientSurname: this.personData.surname || '',
-      clientEmail: this.deviceData[0]?.email || '',
-      clientPhone: this.personData.phone || 'N/A'
-    });
-  }
+  
 
   navigateToWorkSee(deviceId: string): void {
     this.router.navigate(['Workprogressdetialseescreen'], { queryParams: { deviceId } });
