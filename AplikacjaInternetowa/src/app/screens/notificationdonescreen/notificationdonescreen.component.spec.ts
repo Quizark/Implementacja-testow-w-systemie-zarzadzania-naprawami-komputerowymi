@@ -1,24 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotificationdonescreenComponent } from './notificationdonescreen.component';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { ApiConnectionService } from '../../services/api-connection.service';
+import { UserService } from '../../services/user-service.service';
+import { of, throwError } from 'rxjs';
 
 describe('NotificationdonescreenComponent', () => {
   let component: NotificationdonescreenComponent;
   let fixture: ComponentFixture<NotificationdonescreenComponent>;
-  let mockHttpClient: jasmine.SpyObj<HttpClient>;
+  let mockApiService: jasmine.SpyObj<ApiConnectionService>;
+  let mockUserService: jasmine.SpyObj<UserService>;
 
   beforeEach(async () => {
-    mockHttpClient = jasmine.createSpyObj('HttpClient', ['get', 'post']);
-    
-    // Mock the HttpClient methods to return observables
-    mockHttpClient.get.and.returnValue(of([]));
-    mockHttpClient.post.and.returnValue(of({}));
+    mockApiService = jasmine.createSpyObj('ApiConnectionService', ['fetchTasks', 'markTaskAsDone']);
+    mockUserService = jasmine.createSpyObj('UserService', ['getUserEmail', 'getSessionToken']);
+
+    mockUserService.getUserEmail.and.returnValue('test@example.com');
+    mockUserService.getSessionToken.and.returnValue('session-token');
+
+    mockApiService.fetchTasks.and.returnValue(of([
+      { id: '1', description: 'Test Task 1', isDone: false },
+      { id: '2', description: 'Test Task 2', isDone: true },
+    ]));
 
     await TestBed.configureTestingModule({
       imports: [NotificationdonescreenComponent],
       providers: [
-        { provide: HttpClient, useValue: mockHttpClient }
+        { provide: ApiConnectionService, useValue: mockApiService },
+        { provide: UserService, useValue: mockUserService },
       ]
     }).compileComponents();
 
@@ -27,7 +35,12 @@ describe('NotificationdonescreenComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should fetch tasks on initialization', () => {
+    // Then:
+    expect(mockApiService.fetchTasks).toHaveBeenCalledWith('session-token', 'test@example.com');
+    expect(component.tasks.length).toBe(2);
+    expect(component.tasks[0].description).toBe('Test Task 1');
   });
+
+  
 });
