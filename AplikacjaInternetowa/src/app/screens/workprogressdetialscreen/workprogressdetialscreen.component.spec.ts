@@ -3,16 +3,24 @@ import { WorkprogressdetialscreenComponent } from './workprogressdetialscreen.co
 import { ActivatedRoute } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { ApiConnectionService } from '../../services/api-connection.service';
+import { UserService } from '../../services/user-service.service';
 
 describe('WorkprogressdetialscreenComponent', () => {
   let component: WorkprogressdetialscreenComponent;
   let fixture: ComponentFixture<WorkprogressdetialscreenComponent>;
-
+  let mockApiService: jasmine.SpyObj<ApiConnectionService>;
+  let mockUserService: jasmine.SpyObj<UserService>;
+  
   beforeEach(async () => {
+
+    mockApiService = jasmine.createSpyObj('ApiConnectionService', ['fetchPersonDataByEmail']);
+    mockUserService = jasmine.createSpyObj('UserService', ['getSessionToken']);
+
     Object.defineProperty(window, 'history', {
       value: {
         state: { device: [{ email: 'test@example.com' }] },
-        pushState: () => {}
+        pushState: () => { }
       },
       writable: true
     });
@@ -44,5 +52,21 @@ describe('WorkprogressdetialscreenComponent', () => {
 
   it('should set deviceData from history.state', () => {
     expect(component.deviceData).toEqual([{ email: 'test@example.com' }]);
+  });
+
+  it('should fetch person data and update form when valid session token', () => {
+    // Given:
+    const mockPersonData = { name: 'John', surname: 'Doe', phone: '1234567890' };
+    mockUserService.getSessionToken.and.returnValue('valid-session-token');
+    mockApiService.fetchPersonDataByEmail.and.returnValue(of(mockPersonData));
+
+    // When:
+    component.ngOnInit();
+
+    // Then:
+    expect(component.personData).toEqual(mockPersonData);
+    expect(component.clientForm.value.clientName).toBe('John');
+    expect(component.clientForm.value.clientSurname).toBe('Doe');
+    expect(component.clientForm.value.clientPhone).toBe('1234567890');
   });
 });
