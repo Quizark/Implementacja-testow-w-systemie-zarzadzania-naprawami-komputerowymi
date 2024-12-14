@@ -110,4 +110,25 @@ describe('EditemployeescreenComponent', () => {
     );
     expect(component.isAdmin).toBe(false);
   });
+
+  it('should save employee data and navigate back', () => {
+    // Given
+    mockApiService.saveEmployee.and.returnValue(of({}));
+    spyOn(component, 'goBack');
+
+    // When
+    component.handleSave();
+
+    // Then
+    expect(mockApiService.saveEmployee).toHaveBeenCalledWith(
+      'mock-session-token',
+      '123',
+      'John',
+      'Doe',
+      'john.doe@example.com',
+      'Engineering',
+      true
+    );
+    expect(component.goBack).toHaveBeenCalled();
+  });
 });
