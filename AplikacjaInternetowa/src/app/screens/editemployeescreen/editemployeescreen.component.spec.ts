@@ -131,4 +131,17 @@ describe('EditemployeescreenComponent', () => {
     );
     expect(component.goBack).toHaveBeenCalled();
   });
+
+  it('should delete employee and navigate back', () => {
+    // Given
+    mockApiService.deleteEmployee.and.returnValue(of({}));
+    spyOn(component, 'goBack');
+
+    // When
+    component.handleDelete();
+
+    // Then
+    expect(mockApiService.deleteEmployee).toHaveBeenCalledWith('mock-session-token', '');
+    expect(component.goBack).toHaveBeenCalled();
+  });
 });
