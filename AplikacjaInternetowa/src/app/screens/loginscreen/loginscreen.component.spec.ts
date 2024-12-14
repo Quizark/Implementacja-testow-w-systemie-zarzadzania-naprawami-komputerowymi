@@ -57,4 +57,18 @@ describe('LoginScreenComponent', () => {
     expect(mockSnackBar.open).toHaveBeenCalledWith('Login successful', 'Close', { duration: 3000 });
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
   });
+
+  it('should display an error message on login failure', () => {
+    // Given:
+    const mockError = { message: 'Invalid credentials' };
+    mockApiConnection.login.and.returnValue(throwError(() => mockError));
+    component.loginForm.setValue({ email: 'test@example.com', password: 'wrongpassword' });
+
+    // When:
+    component.handleSubmit();
+
+    // Then:
+    expect(mockApiConnection.login).toHaveBeenCalledWith('test@example.com', 'wrongpassword');
+    expect(mockSnackBar.open).toHaveBeenCalledWith('Login failed: Invalid credentials', 'Close', { duration: 3000 });
+  });
 });
