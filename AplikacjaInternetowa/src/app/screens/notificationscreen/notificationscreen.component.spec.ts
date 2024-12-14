@@ -30,4 +30,21 @@ describe('NotificationscreenComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('should filter tasks based on search query', () => {
+    // Mockowane dane zadań
+    const mockTasks = [
+      { deviceCodeNumber: '123', taskDescription: 'Naprawa', employeeEmail: 'employee@example.com', isDone: false },
+      { deviceCodeNumber: '456', taskDescription: 'Serwis', employeeEmail: 'employee2@example.com', isDone: true },
+    ];
+    component.tasks = mockTasks;
+  
+    // Ustawienie zapytania do wyszukiwania
+    const query = 'naprawa';
+    component.handleSearch(query);
+  
+    // Sprawdzanie, czy `filteredTasks` zawiera tylko jedno zadanie
+    expect(component.filteredTasks.length).toBe(1);
+    expect(component.filteredTasks[0].taskDescription).toBe('Naprawa');
+  });
+  
 });
