@@ -42,5 +42,28 @@ describe('NotificationdonescreenComponent', () => {
     expect(component.tasks[0].description).toBe('Test Task 1');
   });
 
-  
+  it('should update tasks after marking a task as done', () => {
+    // Given:
+    mockApiService.markTaskAsDone.and.returnValue(of({}));
+    const fetchTasksSpy = spyOn(component, 'fetchTasks').and.callThrough();
+
+    // When:
+    component.markTaskAsDone('1');
+
+    // Then:
+    expect(mockApiService.markTaskAsDone).toHaveBeenCalledWith('session-token', '1');
+    expect(fetchTasksSpy).toHaveBeenCalled();
+  });
+
+  it('should log error when fetching tasks fails', () => {
+    // Given:
+    const consoleSpy = spyOn(console, 'error');
+    mockApiService.fetchTasks.and.returnValue(throwError(() => new Error('Fetch error')));
+
+    // When:
+    component.fetchTasks();
+
+    // Then:
+    expect(consoleSpy).toHaveBeenCalledWith('Error fetching tasks', jasmine.any(Error));
+  });
 });
