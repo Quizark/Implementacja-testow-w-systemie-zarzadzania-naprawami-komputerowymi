@@ -69,4 +69,14 @@ describe('WorkprogressdetialscreenComponent', () => {
     expect(component.clientForm.value.clientSurname).toBe('Doe');
     expect(component.clientForm.value.clientPhone).toBe('1234567890');
   });
+  it('should not fetch person data if session token is null', () => {
+    // Given:
+    mockUserService.getSessionToken.and.returnValue(null);
+
+    // When:
+    component.ngOnInit();
+
+    // Then:
+    expect(mockApiService.fetchPersonDataByEmail).not.toHaveBeenCalled();
+  });
 });
