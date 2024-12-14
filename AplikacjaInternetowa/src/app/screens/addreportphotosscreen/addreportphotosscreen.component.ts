@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user-service.service';
@@ -17,7 +17,7 @@ import { take } from 'rxjs/operators';
 export class AddreportphotosscreenComponent implements OnInit, OnDestroy {
   selectedPhoto: File | null = null;
   selectedPhotoUrl: string | null = null;
-  reportData: any;
+  reportData: any = {}; // Initializing as an empty object to avoid errors
   private sessionTokenSubscription: Subscription | null = null;
 
   constructor(
@@ -25,10 +25,15 @@ export class AddreportphotosscreenComponent implements OnInit, OnDestroy {
     private router: Router,
     private userService: UserService,
     private apiConnection: ApiConnectionService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.reportData = history.state.reportData;
+    // Ensure reportData exists
+    this.reportData = history.state?.reportData || {};
+    if (!this.reportData || !this.reportData.Device) {
+      // Handle the case when reportData is not properly passed
+      console.error('No report data or device information available.');
+    }
   }
 
   handleAddPhotos(): void {
@@ -46,20 +51,23 @@ export class AddreportphotosscreenComponent implements OnInit, OnDestroy {
   }
 
   handleSubmit(): void {
-    console.log("this.reportData: ",this.reportData);
-    const deviceCode = this.reportData.Device?.id; // Replace with actual code
+    if (!this.reportData?.Device) {
+      alert('Device data is missing!');
+      return;
+    }
+
+    const deviceCode = this.reportData.Device?.id;
 
     this.sessionTokenSubscription = this.userService.sessionToken$.pipe(take(1)).subscribe((sessionToken) => {
-      console.log('Session Token: ', sessionToken);
-      console.log('selectedPhoto: ', this.selectedPhoto);
-      console.log('deviceCode: ', deviceCode);
-
       if (sessionToken && this.selectedPhoto) {
-        this.apiConnection.uploadPhoto(sessionToken, deviceCode, this.selectedPhoto)
-          .subscribe({
-            next: () => alert('Photo uploaded successfully'),
-            error: (error) => alert('Failed to upload photo: ' + error.message)
-          });
+        console.log('Session Token: ', sessionToken);
+        console.log('selectedPhoto: ', this.selectedPhoto);
+        console.log('deviceCode: ', deviceCode);
+
+        this.apiConnection.uploadPhoto(sessionToken, deviceCode, this.selectedPhoto).subscribe({
+          next: () => alert('Photo uploaded successfully'),
+          error: (error) => alert('Failed to upload photo: ' + error.message)
+        });
       } else {
         alert('No photo selected or session token missing');
       }
@@ -71,7 +79,6 @@ export class AddreportphotosscreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up subscription to avoid memory leaks
     if (this.sessionTokenSubscription) {
       this.sessionTokenSubscription.unsubscribe();
     }

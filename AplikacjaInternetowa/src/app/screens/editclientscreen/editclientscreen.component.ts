@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule,FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user-service.service';
 import { ApiConnectionService } from '../../services/api-connection.service';
@@ -9,45 +9,46 @@ import { CommonModule } from '@angular/common';
   selector: 'app-edit-client',
   templateUrl: './editclientscreen.component.html',
   styleUrls: ['./editclientscreen.component.css'],
-  standalone:true,
-  imports: [ReactiveFormsModule,CommonModule],
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class EditclientscreenComponent implements OnInit {
   clientForm!: FormGroup;
   clientId!: string;
   sessionToken!: string;
-  client: any;
-//SPRAWDZIĆ CZY TE WYKRZYKNIKI NIE PSUJĄ
+  client: any = {};  // Upewniamy się, że client jest zawsze zainicjowany
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
     private apiConnectionService: ApiConnectionService
-  ) {}
+  ) { }
 
   ngOnInit() {
-    
     const sessionToken = this.userService.getSessionToken();
-    //POBIERANIE DANYCH O KLIENCIE Z POPRZEDNIEGO EKRANU!!!
     this.sessionToken = sessionToken || '';
 
-    this.client = history.state.client;
+    // Safely access history.state.client
+    const navigationData = history.state?.client || {}; // Default to an empty object if undefined
+    this.client = navigationData;
 
+    // Sprawdzamy, czy client zawiera wymagane dane przed inicjalizacją formularza
     this.clientForm = this.fb.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-    })
-    this.initializeForm(this.client);
+      name: [this.client?.name || '', Validators.required],
+      surname: [this.client?.surname || '', Validators.required],
+      email: [this.client?.email || '', [Validators.required, Validators.email]],
+      phone: [this.client?.phone || '', Validators.required],
+    });
   }
+
   initializeForm(client: any): void {
     this.clientForm.patchValue({
       name: client.name,
       surname: client.surname,
       email: client.email,
-      phone: client.phone
+      phone: client.phone,
     });
   }
 
@@ -59,8 +60,7 @@ export class EditclientscreenComponent implements OnInit {
       name,
       surname,
       email,
-      phone,
-      
+      phone
     ).subscribe(() => {
       window.history.back();
     });

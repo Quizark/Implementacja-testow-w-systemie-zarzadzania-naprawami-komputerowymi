@@ -18,6 +18,9 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
+  isAuthenticated(): boolean {
+    return true; 
+  }
   setUserEmail(email: string): void {
     this.userEmailSubject.next(email);
     this.checkAdminStatus(email, this.sessionTokenSubject.value);

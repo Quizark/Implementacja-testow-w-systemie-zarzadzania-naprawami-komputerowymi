@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-managment-screen',
   templateUrl: './managmentscreen.component.html',
-  styleUrls: ['./managmentscreen.component.css']
+  styleUrls: ['./managmentscreen.component.css'],
+  standalone: true,
 })
 export class ManagmentscreenComponent {
 

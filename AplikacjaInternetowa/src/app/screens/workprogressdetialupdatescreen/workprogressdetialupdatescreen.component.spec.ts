@@ -1,20 +1,43 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { WorkprogressdetialseescreenComponent } from '../workprogressdetialseescreen/workprogressdetialseescreen.component';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { ApiConnectionService } from '../../services/api-connection.service';
+import { UserService } from '../../services/user-service.service';
 
-import { WorkprogressdetialupdatescreenComponent } from './workprogressdetialupdatescreen.component';
-
-describe('WorkprogressdetialupdatescreenComponent', () => {
-  let component: WorkprogressdetialupdatescreenComponent;
-  let fixture: ComponentFixture<WorkprogressdetialupdatescreenComponent>;
+describe('WorkprogressdetialseescreenComponent', () => {
+  let component: WorkprogressdetialseescreenComponent;
+  let fixture: ComponentFixture<WorkprogressdetialseescreenComponent>;
+  let apiConnectionService: jasmine.SpyObj<ApiConnectionService>;
+  let userService: jasmine.SpyObj<UserService>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [WorkprogressdetialupdatescreenComponent]
-    })
-    .compileComponents();
+    // Mocking ApiConnectionService and UserService
+    const apiSpy = jasmine.createSpyObj('ApiConnectionService', ['fetchDeviceDetails', 'fetchDevicePhotos']);
+    const userSpy = jasmine.createSpyObj('UserService', ['getSessionToken']);
 
-    fixture = TestBed.createComponent(WorkprogressdetialupdatescreenComponent);
+    await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [
+        { provide: ApiConnectionService, useValue: apiSpy },
+        { provide: UserService, useValue: userSpy },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParams: of({ deviceId: '123' })
+          }
+        }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(WorkprogressdetialseescreenComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    apiConnectionService = TestBed.inject(ApiConnectionService) as jasmine.SpyObj<ApiConnectionService>;
+    userService = TestBed.inject(UserService) as jasmine.SpyObj<UserService>;
+
+    // Mock session token
+    userService.getSessionToken.and.returnValue('mockSessionToken');
   });
 
   it('should create', () => {

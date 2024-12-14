@@ -1,18 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoginscreenComponent } from './loginscreen.component';
+import { LoginScreenComponent } from './loginscreen.component';
+import { HttpClient } from '@angular/common/http';
 
 describe('LoginscreenComponent', () => {
-  let component: LoginscreenComponent;
-  let fixture: ComponentFixture<LoginscreenComponent>;
+  let component: LoginScreenComponent;
+  let fixture: ComponentFixture<LoginScreenComponent>;
+  let mockHttpClient: jasmine.SpyObj<HttpClient>;
 
   beforeEach(async () => {
+    mockHttpClient = jasmine.createSpyObj('HttpClient', ['get', 'post']);
     await TestBed.configureTestingModule({
-      imports: [LoginscreenComponent]
+      imports: [LoginScreenComponent],
+      providers: [
+        { provide: HttpClient, useValue: mockHttpClient }
+      ]
     })
-    .compileComponents();
+      .compileComponents();
 
-    fixture = TestBed.createComponent(LoginscreenComponent);
+    fixture = TestBed.createComponent(LoginScreenComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
