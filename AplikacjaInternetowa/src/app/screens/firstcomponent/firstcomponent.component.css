@@ -78,6 +78,6 @@
     width: calc(33.333% - 10px); /* Trzy zdjęcia w jednym rzędzie */
     border-radius: 5px;
     object-fit: cover;
-    height: 150px;
+    height: 33%;
   }
   

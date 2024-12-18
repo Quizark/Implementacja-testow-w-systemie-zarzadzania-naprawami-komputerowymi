@@ -31,7 +31,7 @@ public class DeviceControllerTest {
         // Given
         String validSessionToken = getLoginToken();
         Device device = new Device();
-        device.setCodeNumber("12345");
+        device.setCodeNumber("1234566");
         device.setEmail("duplicate@example.com");
         device.setVisibleDamage("None");
         device.setDescription("New laptop");
@@ -44,7 +44,7 @@ public class DeviceControllerTest {
                 // Then
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("Device registered successfully"))
-                .andExpect(jsonPath("$.Device.codeNumber").value("12345"));
+                .andExpect(jsonPath("$.Device.codeNumber").value("1234566"));
     }
 
     @Test
@@ -64,8 +64,8 @@ public class DeviceControllerTest {
     @Test
     public void shouldReturnDeviceNotFoundWhenDeviceDoesNotExist() throws Exception {
         // Given
-        String codeNumber = "12345";
-        String email = "test@example.com";
+        String codeNumber = "12345123";
+        String email = "example@example.com";
 
         // When
         mockMvc.perform(get("/devices/deviceWithDetails")
@@ -79,8 +79,8 @@ public class DeviceControllerTest {
 
     private String getLoginToken() throws Exception {
         User user = new User();
-        user.setEmail("test@test.test");
-        user.setPassword("!1Password");
+        user.setEmail("example@example.com");
+        user.setPassword("password");
 
         MvcResult result = mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)

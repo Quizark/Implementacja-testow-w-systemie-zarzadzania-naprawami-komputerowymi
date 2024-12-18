@@ -33,7 +33,7 @@ public class TaskControllerTest {
     public void shouldGetTasksForUserWithValidSession() throws Exception {
         // Given
         String token = getLoginToken();
-        String userEmail = "test@example.com";
+        String userEmail = "example@example.com";
 
         // When
         mockMvc.perform(get("/tasks/{email}", userEmail)
@@ -45,8 +45,8 @@ public class TaskControllerTest {
 
     private String getLoginToken() throws Exception {
         User user = new User();
-        user.setEmail("test@test.test");
-        user.setPassword("!1Password");
+        user.setEmail("example@example.com");
+        user.setPassword("password");
 
         MvcResult result = mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
