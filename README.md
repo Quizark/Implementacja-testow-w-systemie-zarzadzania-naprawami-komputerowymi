@@ -6,7 +6,7 @@
 
 # Opis projektu
 
-//TODO
+Projekt "Implementacja testów w systemie zarządzania naprawami komputerowymi" ma na celu opracowanie i wdrożenie testów jednostkowych oraz integracyjnych dla funkcji systemu. System ten umożliwia zarządzanie naprawami urządzeń, w tym monitorowanie statusów napraw, zarządzanie danymi klientów, urządzeń oraz pracowników, a także administrowanie dostępem użytkowników.
 
 # Uruchamianie projektu
 
@@ -129,23 +129,37 @@ Aby poprawnie uruchomić aplikację, należy wykonać następujące kroki:
 - Weryfikuje, czy komunikat o błędzie jest wyświetlany z obiektem błędu.
 ---
 8. [should submit login form and navigate to home on success](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/loginscreen/loginscreen.component.spec.ts#L43-L59)
+- Testuje, czy formularz logowania jest poprawnie przesyłany, a użytkownik jest przekierowywany na stronę główną po pomyślnym logowaniu. 
+- Sprawdza, czy po wywołaniu metody handleSubmit z odpowiednimi danymi logowania (adres e-mail i hasło), metoda login w serwisie ApiConnectionService jest wywoływana z poprawnymi parametrami (adres e-mail i hasło). 
+- Weryfikuje, czy po uzyskaniu poprawnej odpowiedzi (zawierającej token sesji), użytkownikowy e-mail i token sesji są ustawiane w serwisie UserService, a także czy wyświetlany jest komunikat o pomyślnym logowaniu. Na końcu sprawdza, czy następuje przekierowanie użytkownika do strony głównej (/home).
 
 ---
 9. [should display an error message on login failure](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/loginscreen/loginscreen.component.spec.ts#L61-L73)
+- Testuje, czy komunikat o błędzie jest wyświetlany, gdy logowanie kończy się niepowodzeniem. 
+- Sprawdza, czy po wywołaniu metody handleSubmit z niepoprawnymi danymi logowania (złym hasłem), metoda login w serwisie ApiConnectionService jest wywoływana z odpowiednimi parametrami. 
+- Następnie, po uzyskaniu błędu, testuje, czy odpowiedni komunikat o błędzie jest wyświetlany w postaci powiadomienia za pomocą MatSnackBar.
 
 ---
-10. []()
-
+10. [should initialize the form with employee data]()
+- Testuje, czy formularz jest inicjalizowany z danymi pracownika. 
+- Sprawdza, czy po załadowaniu komponentu formularz zawiera odpowiednie dane (imię, nazwisko, email, specjalizacja) dla pracownika, którego dane są przekazywane przez history.state. 
+- Weryfikuje, czy status administratora (isAdmin) jest ustawiony poprawnie.
 ---
-11. []()
-
+11. [should toggle admin status and update the server]()
+- Testuje, czy po zmianie statusu administratora zostaje on poprawnie zaktualizowany na serwerze. 
+- Sprawdza, czy metoda toggleAdmin w serwisie ApiConnectionService jest wywoływana z odpowiednimi parametrami.
+- Weryfikuje czy status administratora (isAdmin) komponentu zmienia się zgodnie z oczekiwaniami (z true na false).
 ---
-12. []()
-
+12. [should save employee data and navigate back]()
+- Testuje, czy dane pracownika są poprawnie zapisane i użytkownik zostaje przekierowany z powrotem. 
+- Sprawdza, czy metoda saveEmployee w serwisie ApiConnectionService jest wywoływana z odpowiednimi parametrami. 
+- Weryfikuje, czy po zapisaniu danych wywoływana jest metoda goBack, która ma na celu nawigację z powrotem.
 ---
-13. []()
+13. [should delete employee and navigate back]()
+- Testuje, czy pracownik jest poprawnie usuwany i użytkownik zostaje przekierowany z powrotem. 
+- Sprawdza, czy metoda deleteEmployee w serwisie ApiConnectionService jest wywoływana z odpowiednim identyfikatorem pracownika (który jest pusty w tym teście).
+- Weryfikuje czy po usunięciu wywoływana jest metoda goBack.
 
----
 
 # Dokementacja API
 
