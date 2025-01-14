@@ -93,6 +93,60 @@ Aby poprawnie uruchomić aplikację, należy wykonać następujące kroki:
 
 ## Testy jednostkowe
 
+1. [should filter tasks based on search query](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/notificationscreen/notificationscreen.component.spec.ts#L35-L50)
+- Testuje funkcjonalność filtrowania zadań na podstawie zapytania wyszukiwania.
+- Sprawdza, czy lista zadań jest poprawnie filtrowana na podstawie podanego zapytania. 
+- Weryfikuje, czy po wywołaniu metody handleSearch zadania zostały odpowiednio przefiltrowane, a liczba wyników oraz opis zadania odpowiadają oczekiwaniom.
+---
+2. [checking if the task list is loaded](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/notificationscreen/notificationscreen.component.spec.ts#L51-L66)
+- Testuje, czy lista zadań jest poprawnie ładowana. 
+- Sprawdza, czy po wywołaniu metody loadTasks lista zadań jest poprawnie załadowana z mockowanego serwisu. 
+- Weryfikuje, czy po załadowaniu danych lista tasks i filteredTasks zawiera te same dane, co mockowane zadania.
+---
+3. [should submit valid form and call API](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/search-for-client/search-for-client.component.spec.ts#L30-L48)
+- Testuje, czy formularz jest poprawnie wysyłany i wywołuje odpowiedni endpoint API. 
+- Sprawdza, czy po wypełnieniu formularza z prawidłowymi danymi i jego wysłaniu, metoda getDeviceWithDetails jest wywoływana z odpowiednimi parametrami. 
+- Weryfikuje, czy po otrzymaniu odpowiedzi od API, następuje przekierowanie użytkownika na stronę /ClientFinalScreen z odpowiednimi danymi urządzenia.
+---
+4. [should not call fetchPersonDataByEmail if session token is missing](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/workprogressdetialscreen/workprogressdetialscreen.component.spec.ts#L60-L74)
+- Testuje, czy metoda fetchPersonDataByEmail nie jest wywoływana, gdy brak jest tokenu sesji. 
+- Sprawdza, czy w przypadku, gdy token sesji jest null, metoda fetchPersonDataByEmail nie zostanie wywołana. 
+- Weryfikuje, czy personData jest ustawione na pusty obiekt w takim przypadku.
+---
+5. [should log error if session token is null](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/workprogressdetialscreen/workprogressdetialscreen.component.spec.ts#L76-87)
+- Testuje, czy logowany jest błąd, gdy token sesji jest null. 
+- Sprawdza, czy w przypadku, gdy token sesji jest null, zostanie wywołana funkcja console.error z odpowiednim komunikatem o błędzie. 
+- Weryfikuje, czy komunikat o braku tokenu sesji pojawi się w konsoli.
+---
+6. [should update tasks after marking a task as done](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/notificationdonescreen/notificationdonescreen.component.spec.ts#L45-L56)
+- Testuje, czy lista zadań jest aktualizowana po oznaczeniu zadania jako zakończonego. 
+- Sprawdza, czy po wywołaniu metody markTaskAsDone z odpowiednim identyfikatorem zadania, metoda markTaskAsDone w ApiConnectionService jest wywoływana z odpowiednimi argumentami. 
+- Weryfikuje, czy po zakończeniu zadania metoda fetchTasks jest wywoływana, aby zaktualizować listę zadań.
+---
+7. [should log error when fetching tasks fails](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/notificationdonescreen/notificationdonescreen.component.spec.ts#L58-L68)
+- Testuje, czy błąd jest logowany, gdy pobieranie zadań kończy się niepowodzeniem. 
+- Sprawdza, czy w przypadku błędu podczas wywołania metody fetchTasks (symulowanego przez throwError), w konsoli zostanie zalogowany odpowiedni komunikat o błędzie. 
+- Weryfikuje, czy komunikat o błędzie jest wyświetlany z obiektem błędu.
+---
+8. [should submit login form and navigate to home on success](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/loginscreen/loginscreen.component.spec.ts#L43-L59)
+
+---
+9. [should display an error message on login failure](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/AplikacjaInternetowa/src/app/screens/loginscreen/loginscreen.component.spec.ts#L61-L73)
+
+---
+10. []()
+
+---
+11. []()
+
+---
+12. []()
+
+---
+13. []()
+
+---
+
 # Dokementacja API
 
 //TODO
