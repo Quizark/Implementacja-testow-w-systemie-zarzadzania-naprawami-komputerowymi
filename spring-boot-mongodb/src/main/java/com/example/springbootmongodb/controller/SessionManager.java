@@ -18,4 +18,12 @@ public class SessionManager {
         Claims claims = jwtUtil.validateToken(sessionToken);
         return claims != null && claims.getExpiration().after(new Date());
     }
+    // Pobierz email użytkownika z tokena
+    public String getEmailFromToken(String token) {
+        Claims claims = jwtUtil.validateToken(token);
+        if (claims != null) {
+            return claims.getSubject();  // Zwracamy email użytkownika, który jest zapisany jako subject w tokenie
+        }
+        return null;  // Jeśli token jest nieprawidłowy
+    }
 }

@@ -3,8 +3,10 @@ package com.example.springbootmongodb.test;
 import com.example.springbootmongodb.model.Person;
 import com.example.springbootmongodb.model.User;
 import com.example.springbootmongodb.repository.PersonRepository;
+import com.example.springbootmongodb.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,15 @@ public class PersonControllerTest {
 
     private static boolean isDataCleared = false;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     public void setUp() {
+        User existingUser = userRepository.findByEmail("tokenAccount@example.com");
+        if (existingUser != null) {
+            userRepository.delete(existingUser);
+        }
         if (!isDataCleared) {
             Person existingPerson = personRepository.findByEmail("duplicate@example.com");
             if (existingPerson != null) {
@@ -93,11 +102,17 @@ public class PersonControllerTest {
                 .andExpect(content().string("Email already in use"));
     }
 
-
     private String getLoginToken() throws Exception {
+        User existingUser = new User();
+        existingUser.setEmail("tokenAccount@example.com");
+        existingUser.setPassword(DigestUtils.sha256Hex("tokenAccountPassword"));
+        existingUser.setIsAdmin(true);
+        existingUser.setIsActive(true);
+        userRepository.save(existingUser);
+
         User user = new User();
-        user.setEmail("example@example.com");
-        user.setPassword("password");
+        user.setEmail("tokenAccount@example.com");
+        user.setPassword("tokenAccountPassword");
 
         MvcResult result = mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -107,4 +122,5 @@ public class PersonControllerTest {
 
         return JsonPath.read(result.getResponse().getContentAsString(), "$.sessionToken");
     }
+
 }

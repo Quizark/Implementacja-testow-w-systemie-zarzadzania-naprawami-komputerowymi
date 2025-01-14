@@ -8,4 +8,8 @@ import java.util.List;
 public interface UserRepository extends MongoRepository<User, String> {
     User findByEmail(String email);
     List<User> findByIsAdminTrue();
+    boolean existsByIsAdminTrue();
+    boolean existsByIsActiveTrue();
+    public void deleteByEmail(String email);
+
 }

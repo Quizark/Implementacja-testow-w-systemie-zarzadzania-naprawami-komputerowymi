@@ -4,6 +4,8 @@ import com.example.springbootmongodb.model.User;
 import com.example.springbootmongodb.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +31,14 @@ public class TaskControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @BeforeEach
+    public void setUp() {
+        // Usuń użytkownika o e-mailu example@example.com, jeśli istnieje
+        User existingUser = userRepository.findByEmail("tokenAccount@example.com");
+        if (existingUser != null) {
+            userRepository.delete(existingUser);
+        }
+    }
     @Test
     public void shouldGetTasksForUserWithValidSession() throws Exception {
         // Given
@@ -44,9 +54,16 @@ public class TaskControllerTest {
 
 
     private String getLoginToken() throws Exception {
+        User existingUser = new User();
+        existingUser.setEmail("tokenAccount@example.com");
+        existingUser.setPassword(DigestUtils.sha256Hex("tokenAccountPassword"));
+        existingUser.setIsAdmin(true);
+        existingUser.setIsActive(true);
+        userRepository.save(existingUser);
+
         User user = new User();
-        user.setEmail("example@example.com");
-        user.setPassword("password");
+        user.setEmail("tokenAccount@example.com");
+        user.setPassword("tokenAccountPassword");
 
         MvcResult result = mockMvc.perform(post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)

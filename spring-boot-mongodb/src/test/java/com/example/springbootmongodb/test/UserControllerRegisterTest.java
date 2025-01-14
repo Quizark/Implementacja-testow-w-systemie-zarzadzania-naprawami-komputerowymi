@@ -45,8 +45,10 @@ public class UserControllerRegisterTest {
         newUser.setEmail("example@example.com");
         newUser.setPassword(DigestUtils.sha256Hex("password"));
         newUser.setName("John");
+        newUser.setSurname("Nowak");
+        newUser.setSpecialization("IT");
         newUser.setSurname("Doe");
-
+        
         // When
         mockMvc.perform(post("/users/register")
                         .contentType("application/json")

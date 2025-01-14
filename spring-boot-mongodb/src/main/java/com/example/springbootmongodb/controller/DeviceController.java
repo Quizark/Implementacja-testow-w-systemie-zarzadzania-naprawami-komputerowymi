@@ -1,15 +1,27 @@
 package com.example.springbootmongodb.controller;
 
+import com.example.springbootmongodb.model.User;
 import com.example.springbootmongodb.repository.DetailsRepository;
 import com.example.springbootmongodb.repository.DeviceRepository;
 import com.example.springbootmongodb.repository.PersonRepository;
 import com.example.springbootmongodb.model.Details;
 import com.example.springbootmongodb.model.Device;
+import com.example.springbootmongodb.repository.UserRepository;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +29,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/devices")
+@Tag(
+        name = "Device Management",
+        description = "Zarządzanie urządzeniami w systemie"
+)
 public class DeviceController {
     @Autowired
     private DetailsRepository detailsRepository;
@@ -26,13 +42,18 @@ public class DeviceController {
     private PersonRepository personRepository;
     @Autowired
     private SessionManager sessionManager; // Referencja do UserController, gdzie zarządzane są sesje
-
+    @Autowired
+    private UserRepository userRepository;
     private boolean isSessionValid(String sessionToken) {
         return sessionManager.isSessionValid(sessionToken);
     }
 
     @GetMapping
-    public ResponseEntity<List<Device>> getAllDevices(@RequestHeader("Authorization") String sessionToken) {
+    @Operation(
+            summary = "Pobierz wszystkie urządzenia",
+            description = "Zwraca listę wszystkich urządzeń w systemie"
+    )
+    public ResponseEntity<List<Device>> getAllDevices(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken) {
         if (!isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(null);
@@ -43,7 +64,11 @@ public class DeviceController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createDevice(@RequestHeader("Authorization") String sessionToken,
+    @Operation(
+            summary = "Utwórz nowe urządzenie",
+            description = "Dodaje nowe urządzenie do systemu"
+    )
+    public ResponseEntity<Object> createDevice(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken,
                                                @RequestBody Device device) {
         // Zapisz nowe urządzenie w bazie danych
         if (!isSessionValid(sessionToken)) {
@@ -68,40 +93,12 @@ public class DeviceController {
         // Zwróć odpowiedź z kodem statusu CREATED
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-    @GetMapping("/email/{email}")
-    public ResponseEntity<List<Device>> findByEmail(@RequestHeader("Authorization") String sessionToken,
-                                                    @PathVariable String email) {
-        if (!isSessionValid(sessionToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(null);
-        }
-        List<Device> devices = deviceRepository.findByEmail(email);
-        if (devices != null && !devices.isEmpty()) {
-            return new ResponseEntity<>(devices, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    @GetMapping("/getDeviceIdByEmail/{email}")
-    public ResponseEntity<List<String>> findCodeNumbersByEmail(@RequestHeader("Authorization") String sessionToken,
-                                                               @PathVariable String email) {
-        if (!isSessionValid(sessionToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(null);
-        }
-        List<Device> devices = deviceRepository.findCodeNumbersByEmail(email);
-        if (devices != null && !devices.isEmpty()) {
-            // Mapowanie listy urządzeń do listy kodów
-            List<String> codeNumbers = devices.stream()
-                    .map(Device::getCodeNumber)
-                    .collect(Collectors.toList());
-            return new ResponseEntity<>(codeNumbers, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
     @PostMapping("/createNew")
-    public ResponseEntity<Object> createNewDevice(@RequestHeader("Authorization") String sessionToken,
+    @Operation(
+            summary = "Utwórz nowe urządzenie z automatycznym generowaniem kodu",
+            description = "Dodaje nowe urządzenie do systemu, generując automatycznie unikalny kod urządzenia"
+    )
+    public ResponseEntity<Object> createNewDevice(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken,
                                                   @RequestBody Device device) {
         if (!isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -130,9 +127,54 @@ public class DeviceController {
         // Zwróć odpowiedź z kodem statusu CREATED
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+    @GetMapping("/email/{email}")
+    @Operation(
+            summary = "Znajdź urządzenia po e-mailu",
+            description = "Zwraca listę urządzeń przypisanych do danego adresu e-mail"
+    )
+    public ResponseEntity<List<Device>> findByEmail(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken,
+                                                    @PathVariable String email) {
+        if (!isSessionValid(sessionToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(null);
+        }
+        List<Device> devices = deviceRepository.findByEmail(email);
+        if (devices != null && !devices.isEmpty()) {
+            return new ResponseEntity<>(devices, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/getDeviceIdByEmail/{email}")
+    @Operation(
+            summary = "Pobierz numery kodów urządzeń dla użytkownika",
+            description = "Zwraca listę numerów kodów urządzeń przypisanych do danego użytkownika na podstawie e-maila"
+    )
+    public ResponseEntity<List<String>> findCodeNumbersByEmail(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken,
+                                                               @PathVariable String email) {
+        if (!isSessionValid(sessionToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(null);
+        }
+        List<Device> devices = deviceRepository.findCodeNumbersByEmail(email);
+        if (devices != null && !devices.isEmpty()) {
+            // Mapowanie listy urządzeń do listy kodów
+            List<String> codeNumbers = devices.stream()
+                    .map(Device::getCodeNumber)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(codeNumbers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping("/{codeNumber}")
-    public ResponseEntity<List<Device>> getDevicesByCodeNumber(@RequestHeader("Authorization") String sessionToken,
+    @Operation(
+            summary = "Znajdź urządzenia po numerze kodu",
+            description = "Zwraca listę urządzeń na podstawie unikalnego numeru kodu"
+    )
+    public ResponseEntity<List<Device>> getDevicesByCodeNumber(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken,
                                                                @PathVariable String codeNumber) {
         if (!isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -144,7 +186,11 @@ public class DeviceController {
     }
 
     @GetMapping("/maxCodeNumber")
-    public ResponseEntity<Integer> getMaxCodeNumber(@RequestHeader("Authorization") String sessionToken) {
+    @Operation(
+            summary = "Pobierz maksymalny numer kodu",
+            description = "Zwraca maksymalny numer kodu urządzenia w systemie"
+    )
+    public ResponseEntity<Integer> getMaxCodeNumber(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken) {
         if (!isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(null);
@@ -154,7 +200,11 @@ public class DeviceController {
     }
 
     @GetMapping("/generateCode")
-    public ResponseEntity<Integer> generateCode(@RequestHeader("Authorization") String sessionToken) {
+    @Operation(
+            summary = "Generuj nowy numer kodu urządzenia",
+            description = "Zwraca nowy, unikalny numer kodu urządzenia na podstawie maksymalnego istniejącego numeru"
+    )
+    public ResponseEntity<Integer> generateCode(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken) {
         if (!isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(null);
@@ -166,7 +216,11 @@ public class DeviceController {
     }
 
     @PutMapping("/{codeNumber}")
-    public ResponseEntity<Device> updateDevice(@RequestHeader("Authorization") String sessionToken,
+    @Operation(
+            summary = "Zaktualizuj dane urządzenia",
+            description = "Aktualizuje dane istniejącego urządzenia na podstawie numeru kodu"
+    )
+    public ResponseEntity<Device> updateDevice(@Parameter(description = "Token sesji autoryzacyjnej",required = true)  @RequestHeader("Authorization") String sessionToken,
                                                @PathVariable String codeNumber,
                                                @RequestBody Device deviceDetails) {
         if (!isSessionValid(sessionToken)) {
@@ -189,19 +243,38 @@ public class DeviceController {
     }
 
     @DeleteMapping("/{codeNumber}")
-    public ResponseEntity<Void> deleteDevice(@RequestHeader("Authorization") String sessionToken,
+    @Operation(
+            summary = "Usuń urządzenie",
+            description = "Usuwa urządzenie z systemu na podstawie numeru kodu"
+    )
+    public ResponseEntity<Void> deleteDevice(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken,
                                              @PathVariable String codeNumber) {
         if (!isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .build();
         }
+        // Sprawdzamy, czy użytkownik jest administratorem
+        String userEmail = sessionManager.getEmailFromToken(sessionToken);  // Zakładamy, że masz metodę pobierającą email użytkownika z tokena
+        User user = userRepository.findByEmail(userEmail);  // Pobieramy użytkownika po emailu
 
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Użytkownik nie istnieje
+        }
+
+        // Sprawdzamy, czy użytkownik jest administratorem
+        if (!user.getIsAdmin()) {  // Załóżmy, że masz metodę getIsAdmin() w User
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);  // Użytkownik nie jest administratorem
+        }
         deviceRepository.deleteById(codeNumber);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/deviceWithDetails")
-    public ResponseEntity<Object> getDeviceWithDetails(
+    @Operation(
+            summary = "Pobierz dane o detalach urządzenia",
+            description = "Pobiera dane o detalach urządzenia na podstawie adresu email i numeru urządzenia"
+    )
+    public ResponseEntity<Object> getDeviceWithDetails(@Parameter(description = "Token sesji autoryzacyjnej",required = false) @RequestHeader("Authorization") String sessionToken,
             @RequestParam String codeNumber,
             @RequestParam String email) {
 
@@ -221,4 +294,83 @@ public class DeviceController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
+
+    @GetMapping("/generatePdf")
+    @Operation(
+            summary = "Utwórz plik PDF",
+            description = "Tworzy plik PDF z raportem o naprawie urządzenia na podstawie id urządzenia"
+    )
+    public void generatePdf(@Parameter(description = "Token sesji autoryzacyjnej",required = true) @RequestHeader("Authorization") String sessionToken,
+                            @RequestParam String id, HttpServletResponse response) {
+        // Wyszukaj urządzenie na podstawie id
+        Device device = deviceRepository.findById(id).orElse(null);
+        if (device == null) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return;
+        }
+
+        // Wyszukaj szczegóły związane z tym urządzeniem
+        List<Details> detailsList = detailsRepository.findByDeviceId(device.getId());
+
+        // Ustawienia odpowiedzi dla pliku PDF
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=device-details.pdf");
+
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+             ServletOutputStream outputStream = response.getOutputStream()) {
+
+            // Utworzenie dokumentu PDF
+            Document document = new Document();
+            PdfWriter writer = PdfWriter.getInstance(document, byteArrayOutputStream);
+            document.open();
+
+            // Dodanie tytułu
+            document.add(new Paragraph("Device Details"));
+
+            // Informacje o urządzeniu
+            document.add(new Paragraph("Code Number: " + device.getCodeNumber()));
+            document.add(new Paragraph("Description: " + device.getDescription()));
+            document.add(new Paragraph("Visible Damage: " + device.getVisibleDamage()));
+            document.add(new Paragraph("Device Work: " + device.getDeviceWork()));
+            document.add(new Paragraph("Device Complete: " + device.getDeviceComplete()));
+            document.add(new Paragraph("Email: " + device.getEmail()));
+            document.add(new Paragraph("Employee: " + device.getEmployee()));
+            document.add(new Paragraph("Date: " + device.getDate()));
+            if(!detailsList.isEmpty()) {
+                // Szczegóły urządzenia
+                document.add(new Paragraph("\nDetails:"));
+
+                // Tabela z szczegółami
+                PdfPTable table = new PdfPTable(3); // 3 kolumny: Data, Opis, Uwagi
+                table.addCell("Date");
+                table.addCell("Employee");
+                table.addCell("Description");
+
+
+                for (Details detail : detailsList) {
+                    table.addCell(detail.getDate());
+                    table.addCell(detail.getEmployee());
+                    table.addCell(detail.getDescription());
+
+                }
+
+                // Dodanie tabeli do dokumentu
+                document.add(table);
+            }
+            // Zamykanie dokumentu
+            document.close();
+
+            // Zapisz PDF do odpowiedzi
+            outputStream.write(byteArrayOutputStream.toByteArray());
+            outputStream.flush();
+
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+    }
+
+
+
 }

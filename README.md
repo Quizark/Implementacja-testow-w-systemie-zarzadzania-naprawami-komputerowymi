@@ -163,7 +163,7 @@ Aby poprawnie uruchomić aplikację, należy wykonać następujące kroki:
 
 # Dokementacja API
 
-//TODO
+[Pełna dokumentacja API](http://localhost:8080/swagger-ui/index.html) dostępna jest po uruchomieniu aplikacji serwerowej
 
 # Przypadki testowe dla testera manualnego (TestCase) 
 

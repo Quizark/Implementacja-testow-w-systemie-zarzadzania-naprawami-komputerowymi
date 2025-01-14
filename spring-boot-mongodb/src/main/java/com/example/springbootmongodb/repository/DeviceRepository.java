@@ -20,4 +20,5 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
     List<Device> findCodeNumbersByEmail(String email);
 
     Device findByCodeNumberAndEmail(String codeNumber, String email);
+ 
 }

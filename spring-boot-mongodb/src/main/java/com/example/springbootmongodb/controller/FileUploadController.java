@@ -16,12 +16,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.InputStreamResource;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/upload")
+@Tag(name = "File Upload Management", description = "Zarządzanie przesyłaniem plików i ich pobieraniem")
 public class FileUploadController {
 
     @Autowired
@@ -31,13 +37,18 @@ public class FileUploadController {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private SessionManager sessionManager; // Dodano, aby użyć metody isSessionValid
+    private SessionManager sessionManager;
 
-    // Method to handle file upload
     @PostMapping
-    public ResponseEntity<?> uploadFile(@RequestHeader("Authorization") String sessionToken,
-                                        @RequestParam("file") MultipartFile file,
-                                        @RequestParam("deviceCode") String deviceCode) {
+    @Operation(summary = "Prześlij plik", description = "Przesyła plik i zapisuje jego metadane w bazie danych")
+    public ResponseEntity<?> uploadFile(
+            @Parameter(description = "Token sesji autoryzacyjnej", required = true)
+            @RequestHeader("Authorization") String sessionToken,
+            @Parameter(description = "Plik do przesłania", required = true, schema = @Schema(type = "string", format = "binary"))
+            @RequestParam("file") MultipartFile file,
+            @Parameter(description = "Kod urządzenia, do którego przypisany jest plik", required = true)
+            @RequestParam("deviceCode") String deviceCode) {
+
         if (!sessionManager.isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid session token");
         }
@@ -48,7 +59,6 @@ public class FileUploadController {
             }
 
             String fileId = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType()).toString();
-
             mongoTemplate.save(new PhotoMetadata(fileId, file.getOriginalFilename(), file.getContentType(), deviceCode));
 
             return ResponseEntity.ok("File uploaded successfully. File ID: " + fileId);
@@ -57,11 +67,14 @@ public class FileUploadController {
         }
     }
 
-    // Method to retrieve files by deviceCode
     @GetMapping("/photos")
-    @ResponseBody
-    public ResponseEntity<?> getPhotosByDeviceCode(@RequestHeader("Authorization") String sessionToken,
-                                                   @RequestParam String deviceCode) {
+    @Operation(summary = "Pobierz zdjęcia urządzenia", description = "Zwraca listę identyfikatorów plików dla podanego kodu urządzenia")
+    public ResponseEntity<?> getPhotosByDeviceCode(
+            @Parameter(description = "Token sesji autoryzacyjnej", required = true)
+            @RequestHeader("Authorization") String sessionToken,
+            @Parameter(description = "Kod urządzenia, dla którego mają zostać pobrane zdjęcia", required = true)
+            @RequestParam String deviceCode) {
+
         if (!sessionManager.isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid session token");
         }
@@ -85,11 +98,14 @@ public class FileUploadController {
         }
     }
 
-    // Method to retrieve file by ID
     @GetMapping("/files")
-    @ResponseBody
-    public ResponseEntity<?> getFile(@RequestHeader("Authorization") String sessionToken,
-                                     @RequestParam String id) {
+    @Operation(summary = "Pobierz plik", description = "Pobiera plik na podstawie jego identyfikatora")
+    public ResponseEntity<?> getFile(
+            @Parameter(description = "Token sesji autoryzacyjnej", required = true)
+            @RequestHeader("Authorization") String sessionToken,
+            @Parameter(description = "Identyfikator pliku", required = true)
+            @RequestParam String id) {
+
         if (!sessionManager.isSessionValid(sessionToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid session token");
         }
@@ -113,7 +129,6 @@ public class FileUploadController {
 
         } catch (IOException e) {
             System.out.println("IOException occurred while retrieving the file: " + e.getMessage());
-
             return ResponseEntity.status(500).body("An error occurred while retrieving the file: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Exception occurred while retrieving the file: " + e.getMessage());

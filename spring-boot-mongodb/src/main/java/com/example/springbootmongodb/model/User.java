@@ -1,21 +1,19 @@
 package com.example.springbootmongodb.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "users")
 public class User {
     @Id
     private String id;
-
-    @Indexed(unique = true)
     private String email;
     private String name;
     private String password;
     private String surname;
     private String specialization;
     private boolean isAdmin;
+    private boolean isActive;
 
     // Gettery i settery
     public String getId() {
@@ -66,5 +64,13 @@ public class User {
 
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }
