@@ -67,7 +67,7 @@ export class EditclientscreenComponent implements OnInit {
   }
 
   handleDelete() {
-    this.apiConnectionService.deleteClient(this.client.id, this.sessionToken).subscribe(() => {
+    this.apiConnectionService.deleteClient(this.sessionToken, this.client.id).subscribe(() => {
       window.history.back();
     });
   }

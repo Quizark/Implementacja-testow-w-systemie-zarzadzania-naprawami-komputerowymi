@@ -1,13 +1,15 @@
 package com.example.springbootmongodb.test;
 
 import com.example.springbootmongodb.model.Device;
+import com.example.springbootmongodb.model.Person;
 import com.example.springbootmongodb.model.User;
+import com.example.springbootmongodb.repository.DeviceRepository;
+import com.example.springbootmongodb.repository.PersonRepository;
 import com.example.springbootmongodb.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeviceControllerTest {
 
     @Autowired
@@ -32,11 +35,26 @@ public class DeviceControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
+
     @BeforeEach
     public void setUp() {
         User existingUser = userRepository.findByEmail("tokenAccount@example.com");
         if (existingUser != null) {
             userRepository.delete(existingUser);
+        }
+        Person existingPerson = personRepository.findByEmail("test@example.com");
+        if (existingPerson == null) {
+            Person dupPerson = new Person();
+            dupPerson.setName("Jane");
+            dupPerson.setSurname("Doe");
+            dupPerson.setEmail("test@example.com");
+            dupPerson.setPhone("123456789");
+            personRepository.save(dupPerson);
         }
     }
 
@@ -46,7 +64,7 @@ public class DeviceControllerTest {
         String validSessionToken = getLoginToken();
         Device device = new Device();
         device.setCodeNumber("1234566");
-        device.setEmail("duplicate@example.com");
+        device.setEmail("test@example.com");
         device.setVisibleDamage("None");
         device.setDescription("New laptop");
 
@@ -64,8 +82,15 @@ public class DeviceControllerTest {
     @Test
     public void shouldReturnDevicesByEmail() throws Exception {
         // Given
+        Device device = new Device();
+        device.setCodeNumber("1234566");
+        device.setEmail("device@example.com");
+        device.setVisibleDamage("None");
+        device.setDescription("New laptop");
+        deviceRepository.save(device);
+
         String validSessionToken = getLoginToken();
-        String email = "duplicate@example.com";
+        String email = "device@example.com";
 
         // When
         mockMvc.perform(get("/devices/email/{email}", email)

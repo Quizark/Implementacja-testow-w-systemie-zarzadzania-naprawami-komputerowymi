@@ -165,9 +165,11 @@ Aby poprawnie uruchomić aplikację, należy wykonać następujące kroki:
 
 ![Obraz dokumentacji API](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/Dokumentacja%20API.png)
 
-[Dokumentacja API](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/tree/main/Dokumentacja%20API)
+[Dokumentacja API w SwaggerHub](https://app.swaggerhub.com/apis/akademiatarnowska-920/Implementacja_Testow_Systemu_Zarzadzania_Naprawami/1.0.0)
 
-[Dokumentacja API](http://localhost:8080/swagger-ui/index.html) - dostępna  po uruchomieniu aplikacji serwerowej
+[Dokumentacja Lokalna znajduje się tutaj](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/tree/main/Dokumentacja%20API) - wystarczy pobrać i uruchomić index.html
+
+[Dokumentacja API w SwaggerUI](http://localhost:8080/swagger-ui/index.html) - dostępna  po uruchomieniu aplikacji serwerowej
 
 # Przypadki testowe dla testera manualnego (TestCase) 
 

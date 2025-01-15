@@ -141,7 +141,7 @@ describe('EditemployeescreenComponent', () => {
     component.handleDelete();
 
     // Then
-    expect(mockApiService.deleteEmployee).toHaveBeenCalledWith('mock-session-token', '');
+    expect(mockApiService.deleteEmployee).toHaveBeenCalledWith('mock-session-token', '123');
     expect(component.goBack).toHaveBeenCalled();
   });
 });

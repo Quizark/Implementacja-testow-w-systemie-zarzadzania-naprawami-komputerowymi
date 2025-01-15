@@ -71,7 +71,7 @@ export class EditemployeescreenComponent implements OnInit {
   }
 
   handleDelete(): void {
-    this.apiService.deleteEmployee(this.sessionToken, this.employeeId).subscribe(() => {
+    this.apiService.deleteEmployee(this.sessionToken, this.employee.id).subscribe(() => {
       this.goBack();
     });
   }

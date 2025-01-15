@@ -44,11 +44,20 @@ public class PersonControllerTest {
             userRepository.delete(existingUser);
         }
         if (!isDataCleared) {
-            Person existingPerson = personRepository.findByEmail("duplicate@example.com");
+            Person existingPerson = personRepository.findByEmail("first@example.com");
             if (existingPerson != null) {
                 personRepository.delete(existingPerson);
             }
             isDataCleared = true;
+        }
+        Person existingPerson = personRepository.findByEmail("second@example.com");
+        if (existingPerson == null) {
+            Person createPerson = new Person();
+            createPerson.setName("Jane");
+            createPerson.setSurname("Doe");
+            createPerson.setEmail("second@example.com");
+            createPerson.setPhone("123456789");
+            personRepository.save(createPerson);
         }
     }
 
@@ -71,7 +80,7 @@ public class PersonControllerTest {
         Person newUser = new Person();
         newUser.setName("Jane");
         newUser.setSurname("Doe");
-        newUser.setEmail("duplicate@example.com");
+        newUser.setEmail("first@example.com");
         newUser.setPhone("123456789");
 
         // When
@@ -89,7 +98,7 @@ public class PersonControllerTest {
         Person duplicatePerson = new Person();
         duplicatePerson.setName("Jane");
         duplicatePerson.setSurname("Doe");
-        duplicatePerson.setEmail("duplicate@example.com");
+        duplicatePerson.setEmail("second@example.com");
         duplicatePerson.setPhone("123456789");
 
         // When
