@@ -163,6 +163,8 @@ Aby poprawnie uruchomić aplikację, należy wykonać następujące kroki:
 
 # Dokementacja API
 
+![Obrazdokumentacji API](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/Markdown/Dokumentacja%20API.png)
+
 [Pełna dokumentacja API](http://localhost:8080/swagger-ui/index.html) dostępna jest po uruchomieniu aplikacji serwerowej
 
 # Przypadki testowe dla testera manualnego (TestCase) 
