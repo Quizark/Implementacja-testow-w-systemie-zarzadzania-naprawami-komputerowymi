@@ -34,36 +34,36 @@ Aby poprawnie uruchomić aplikację, należy wykonać następujące kroki:
 
 ## Testy integracyjne
 
-1. [shouldCreateDeviceSuccessfully](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/DeviceControllerTest.java#L29-L48) 
+1. [shouldCreateDeviceSuccessfully](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/DeviceControllerTest.java#L61-L80) 
 - Testuje endpoint POST /devices/create.
 - Sprawdza, czy można poprawnie utworzyć urządzenie przy użyciu prawidłowego tokenu sesji.
 - Weryfikuje, czy odpowiedź zawiera status 201 Created, odpowiedni komunikat i poprawne dane utworzonego urządzenia.
 ---
-2. [shouldReturnDevicesByEmail](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/DeviceControllerTest.java#L50-L62)
+2. [shouldReturnDevicesByEmail](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/DeviceControllerTest.java#L82-L101)
 - Testuje endpoint GET /devices/email/{email}.
 - Sprawdza, czy można pobrać listę urządzeń przypisanych do danego adresu e-mail przy użyciu prawidłowego tokenu sesji.
 - Weryfikuje, czy odpowiedź zwraca status 200 OK i jest w formacie JSON.
 ---
-3. [shouldReturnDeviceNotFoundWhenDeviceDoesNotExist](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/DeviceControllerTest.java#L64-L78)
+3. [shouldReturnDeviceNotFoundWhenDeviceDoesNotExist](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/DeviceControllerTest.java#L103-L119)
 - Testuje endpoint GET /devices/deviceWithDetails.
 - Sprawdza, czy aplikacja zwraca status 404 Not Found i odpowiedni komunikat w przypadku, gdy urządzenie o podanych parametrach (kod i e-mail) nie istnieje.
 ---
-4. [shouldGetAllPersonsWhenSessionIsValid](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/PersonControllerTest.java#L46-L57)
+4. [shouldGetAllPersonsWhenSessionIsValid](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/PersonControllerTest.java#L64-L75)
 - Testuje endpoint GET /persons.
 - Sprawdza, czy można poprawnie pobrać listę wszystkich osób przy użyciu prawidłowego tokenu sesji.
 - Weryfikuje, czy odpowiedź zwraca status 200 OK i jest w formacie JSON.
 ---
-5. [shouldCreateNewUser](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/PersonControllerTest.java#L58-L75)
+5. [shouldCreateNewUser](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/PersonControllerTest.java#L76-L93)
 - Testuje endpoint POST /persons/create.
 - Sprawdza, czy można poprawnie utworzyć nową osobę przy użyciu prawidłowego tokenu sesji.
 - Weryfikuje, czy odpowiedź zwraca status 201 Created.
 ---
-6. [shouldNotCreatePersonWithDuplicateEmail](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/PersonControllerTest.java#L76-L94)
+6. [shouldNotCreatePersonWithDuplicateEmail](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/PersonControllerTest.java#L94-L112)
 - Testuje endpoint POST /persons/create.
 - Sprawdza, czy aplikacja uniemożliwia utworzenie nowej osoby z duplikatem adresu e-mail istniejącego w bazie danych.
 - Weryfikuje, czy odpowiedź zwraca status 409 Conflict oraz komunikat "Email already in use".
 ---
-7. [shouldGetTasksForUserWithValidSession](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/TaskControllerTest.java#L32-L43)
+7. [shouldGetTasksForUserWithValidSession](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/TaskControllerTest.java#L42-L53)
 - Testuje endpoint GET /tasks/{email}.
 - Sprawdza, czy można poprawnie pobrać listę zadań przypisanych do użytkownika z podanym adresem e-mail przy użyciu prawidłowego tokenu sesji.
 - Weryfikuje, czy odpowiedź zwraca status 200 OK.
@@ -73,19 +73,19 @@ Aby poprawnie uruchomić aplikację, należy wykonać następujące kroki:
 - Sprawdza, czy można poprawnie zarejestrować nowego użytkownika przy użyciu poprawnych danych (adres e-mail, hasło, imię, nazwisko).
 - Weryfikuje, czy odpowiedź zwraca status 201 Created.
 ---
-9. [shouldNotRegisterExistingUser](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/UserControllerRegisterTest.java#L58-L73)
+9. [shouldNotRegisterExistingUser](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/UserControllerRegisterTest.java#L60-L75)
 - Testuje endpoint POST /users/register.
 - Sprawdza, czy aplikacja zwraca odpowiedni błąd, gdy użytkownik próbuje zarejestrować się z już istniejącym adresem e-mail.
 - Weryfikuje, czy odpowiedź zwraca status 409 Conflict.
 
 ---
-10. [shouldNotRegisterUserWithBadEmail](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/UserControllerRegisterTest.java#L75-L90)
+10. [shouldNotRegisterUserWithBadEmail](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/UserControllerRegisterTest.java#L77-L91)
 - Testuje endpoint POST /users/register.
 - Sprawdza, czy aplikacja zwraca błąd, gdy użytkownik próbuje zarejestrować się z nieprawidłowym formatem adresu e-mail.
 - Weryfikuje, czy odpowiedź zwraca status 400 Bad Request oraz odpowiedni komunikat o błędzie: "Invalid email format".
 
 ---
-11. [shouldUpdateUserIsAdminToTrue](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/UserControllerTest.java#L34-L62)
+11. [shouldUpdateUserIsAdminToTrue](https://github.com/Quizark/Implementacja-testow-w-systemie-zarzadzania-naprawami-komputerowymi/blob/main/spring-boot-mongodb/src/test/java/com/example/springbootmongodb/test/UserControllerTest.java#L46-L73)
 - Testuje endpoint PUT /users/{id}.
 - Sprawdza, czy można poprawnie zaktualizować wartość pola isAdmin użytkownika na true, korzystając z prawidłowego tokenu sesji.
 - Weryfikuje, czy odpowiedź zwraca status 200 OK oraz czy pole isAdmin w zwróconych danych użytkownika ma wartość true.
